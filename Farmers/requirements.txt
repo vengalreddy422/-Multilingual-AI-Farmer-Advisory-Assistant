@@ -1,0 +1,12 @@
+streamlit
+Pillow
+python-dotenv
+pydantic-settings
+google-genai
+requests
+numpy
+onnxruntime
+SpeechRecognition
+edge-tts
+gTTS
+reportlab

@@ -1,0 +1,44 @@
+# Python Environment & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Database & Storage
+*.db
+*.sqlite
+*.sqlite3
+farm_ledger.db
+
+# Streamlit Local Config & Cache
+.streamlit/secrets.toml
+.streamlit/cache/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files & logs
+*.log
+scratch/
+temp/
