@@ -47,6 +47,11 @@ from src.tools.agri_modules import (
     get_regional_crop_cost_benchmarks, forecast_yield_and_profit_advanced,
     get_dynamic_schemes
 )
+from src.tools.natural_pesticides import (
+    NATURAL_FORMULATIONS,
+    calculate_scaled_formulation,
+    get_recommendations_by_problem
+)
 from src.vision.disease_classifier import PlantDiseaseClassifier
 from src.audio.speech_to_text import transcribe_audio_bytes
 from src.audio.text_to_speech import generate_voice_audio
@@ -545,7 +550,7 @@ with st.sidebar:
                     else:
                         st.error(mail_res["message"])
 
-tab_keys = ["voice", "crops", "mandi", "leaf", "radar", "sms", "water", "soil", "calendar", "profit", "schemes", "community"]
+tab_keys = ["voice", "crops", "mandi", "leaf", "radar", "sms", "water", "soil", "natural", "calendar", "profit", "schemes", "community"]
 tab_labels = [t["tabs"].get(k, k.capitalize()) for k in tab_keys]
 tabs = st.tabs(tab_labels)
 
@@ -927,9 +932,95 @@ with tabs[7]:
             st.info(item)
 
 # =========================================================
-# 📅 TAB 9: CROP ACTIVITY SCHEDULE
+# 🌿 TAB 9: NATURAL BIO-PESTICIDES & ZBNF BOTANICAL DEFENSE
 # =========================================================
 with tabs[8]:
+    st.subheader(f"🌿 {t.get('natural_title', 'Zero Budget Natural Bio-Pesticide Formulations (ZBNF)')}")
+    st.caption("100% Organic, Chemical-Free, ICAR & SPNF Grounded Botanical Recipes tailored to your acreage.")
+
+    col_opt1, col_opt2 = st.columns([1.5, 1])
+    with col_opt1:
+        form_keys = list(NATURAL_FORMULATIONS.keys())
+        form_labels = [NATURAL_FORMULATIONS[k]["name"].get(lang_key, NATURAL_FORMULATIONS[k]["name"]["en"]) for k in form_keys]
+        selected_idx = st.selectbox(
+            "🌱 Select Natural Bio-Formulation:",
+            range(len(form_keys)),
+            format_func=lambda i: form_labels[i],
+            key="nat_form_select"
+        )
+        selected_key = form_keys[selected_idx]
+
+    with col_opt2:
+        calc_mode = st.radio("📐 Scale Formulation By:", ["Landholding (Acres)", "Knapsack Spray Pumps (15L)"], horizontal=True)
+
+    c_scale1, c_scale2 = st.columns(2)
+    with c_scale1:
+        if calc_mode == "Landholding (Acres)":
+            scale_acres = st.number_input("🚜 Cultivated Area (Acres)", value=float(farmer_acres), min_value=0.25, step=0.25)
+            scaled_data = calculate_scaled_formulation(selected_key, acres=scale_acres)
+        else:
+            scale_pumps = st.number_input("🎒 Number of 15L Knapsack Pumps", value=10, min_value=1, step=1)
+            scaled_data = calculate_scaled_formulation(selected_key, knapsack_pumps=scale_pumps)
+
+    with c_scale2:
+        st.info(f"🎯 **Formulation Target:** {scaled_data['unit_label']}")
+        st.caption(f"🐛 **Controls:** {scaled_data['target_pests']}")
+        st.caption(f"🌾 **Ideal for:** {', '.join(scaled_data['target_crops'])}")
+
+    with st.container(border=True):
+        st.markdown("### 🧪 **Calculated Raw Ingredients Needed**")
+        ing_cols = st.columns(len(scaled_data["scaled_ingredients"]))
+        for i_idx, (ing_name, ing_val) in enumerate(scaled_data["scaled_ingredients"].items()):
+            with ing_cols[i_idx % len(ing_cols)]:
+                st.metric(label=ing_name, value=f"{ing_val['scaled_qty']} {ing_val['unit']}")
+
+        badge_c1, badge_c2, badge_c3 = st.columns(3)
+        badge_c1.info(f"⏳ **Fermentation Period:** {scaled_data['fermentation_days']}")
+        badge_c2.info(f"📦 **Shelf Life:** {scaled_data['shelf_life']}")
+        badge_c3.info(f"🚿 **Application Ratio:** {scaled_data['application_method']}")
+
+    st.markdown("### 📝 **Step-by-Step Preparation & Brewing Guide**")
+    for step_num, step_text in enumerate(scaled_data["steps"], 1):
+        st.markdown(f"**{step_num}.** {step_text}")
+
+    st.warning(f"📢 **Field Application Schedule:** {scaled_data['spray_schedule']}")
+
+    recipe_speech = f"{scaled_data['name'].get(lang_key, scaled_data['name']['en'])}. Target pests: {scaled_data['target_pests']}. Ingredients needed: " + ", ".join([f"{k} {v['scaled_qty']} {v['unit']}" for k, v in scaled_data['scaled_ingredients'].items()])
+    if st.button(f"🔊 {t.get('listen_btn', 'Listen Preparation Guide')}", key=f"audio_nat_{selected_key}"):
+        nat_audio = generate_voice_audio(recipe_speech, lang=lang_key)
+        st.audio(nat_audio.getvalue(), format="audio/mp3", autoplay=True)
+
+    st.markdown("---")
+    with st.expander("🔍 **Find Recommended Natural Solution by Pest / Crop Problem**", expanded=False):
+        c_prob1, c_prob2 = st.columns(2)
+        with c_prob1:
+            filter_crop = st.selectbox("Your Crop", ["All Crops"] + area_crop_options, key="nat_filter_crop")
+        with c_prob2:
+            filter_prob = st.selectbox(
+                "Observed Pest / Disease Category",
+                [
+                    "All",
+                    "Sucking Pests (Aphids, Thrips, Whiteflies)",
+                    "Caterpillars & Stem Borers",
+                    "Pod Borers & Bollworms",
+                    "Fungal Diseases, Blight & Mildew",
+                    "Soil Health & Root Vigor Booster"
+                ],
+                key="nat_filter_prob"
+            )
+
+        matched_recs = get_recommendations_by_problem(filter_crop, filter_prob)
+        for m_item in matched_recs:
+            with st.container(border=True):
+                st.markdown(f"#### {m_item['name'].get(lang_key, m_item['name']['en'])}")
+                st.write(f"🎯 **Target:** {m_item['target_pests']}")
+                st.caption(f"🌾 **Crops:** {', '.join(m_item['target_crops'])} | ⏳ **Fermentation:** {m_item['fermentation_days']}")
+                st.write(f"💧 **How to Apply:** {m_item['application_method']}")
+
+# =========================================================
+# 📅 TAB 10: CROP ACTIVITY SCHEDULE
+# =========================================================
+with tabs[9]:
     st.subheader(f"📅 {t.get('calendar_title', 'Crop Activity Schedule')}")
     cal_crop = st.selectbox("Sown Crop", area_crop_options, key="cal_crop_select")
     sow_d = st.date_input("Sowing Date", value=date.today())
@@ -939,9 +1030,9 @@ with tabs[8]:
             st.write(desc)
 
 # =========================================================
-# 📈 TAB 10: YIELD & PROFIT FORECASTER
+# 📈 TAB 11: YIELD & PROFIT FORECASTER
 # =========================================================
-with tabs[9]:
+with tabs[10]:
     st.subheader(f"📈 {t.get('profit_title', 'Crop Economics & Profit Forecaster')}")
 
     with st.form("profit_fast_form"):
@@ -991,9 +1082,9 @@ with tabs[9]:
         kpi4.metric("💰 Net Profit", f"₹{eco_res['net_profit']:,}", delta=profit_delta)
 
 # =========================================================
-# 🏛️ TAB 11: GOVT SCHEMES
+# 🏛️ TAB 12: GOVT SCHEMES
 # =========================================================
-with tabs[10]:
+with tabs[11]:
     st.subheader(f"🏛️ {t.get('schemes_title', 'Government Schemes')} ({farmer_name_clean})")
     matched_schemes = get_cached_schemes(farmer_acres, farmer_location)
 
@@ -1010,9 +1101,9 @@ with tabs[10]:
             st.info(f"👤 **Eligibility:** {sch['eligibility']}")
 
 # =========================================================
-# 👥 TAB 12: REGIONAL COMMUNITY
+# 👥 TAB 13: REGIONAL COMMUNITY
 # =========================================================
-with tabs[11]:
+with tabs[12]:
     st.subheader(f"👥 {t.get('community_title', 'Regional Community')} ({farmer_location})")
     comm_data = get_cached_community(farmer_location)
     c_b1, c_b2 = st.columns([2, 1])
