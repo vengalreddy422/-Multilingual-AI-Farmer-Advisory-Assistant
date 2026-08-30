@@ -386,26 +386,51 @@ with st.sidebar:
     st.markdown("---")
     st.markdown(f"### 📍 {t.get('location', 'Current Location')}")
 
-    # 1. Quick Agricultural District Selector
+    # 1. Quick Agricultural District Selector (Pan-India)
     district_presets = [
-        "-- Select / Search District --",
-        "Nellore (నెల్లూరు)",
-        "Guntur (గుంటూరు)",
-        "Madanapalle (మదనపల్లె)",
-        "Tirupati (తిరుపతి)",
-        "Kurnool (కర్నూలు)",
-        "Vijayawada (విజయవాడ)",
-        "Anantapur (అనంతపురం)",
-        "Kadapa (కడప)",
-        "Warangal (వరంగల్)",
-        "Karimnagar (కరీంనగర్)",
-        "Hyderabad (హైదరాబాద్)",
-        "Pune (पुणे)",
-        "Nashik (नासिक)",
-        "Nagpur (नागपुर)",
-        "Coimbatore (கோயம்புத்தூர்)",
-        "Belagavi (ಬೆಳಗಾವಿ)",
-        "Ludhiana (ਲੁਧਿਆਣਾ)"
+        "-- Select District / State --",
+        "Ludhiana, Punjab (ਲੁਧਿਆਣਾ)",
+        "Amritsar, Punjab",
+        "Karnal, Haryana (करनाल)",
+        "Hisar, Haryana",
+        "Varanasi, UP (वाराणसी)",
+        "Lucknow, UP (लखनऊ)",
+        "Gorakhpur, UP",
+        "Patna, Bihar (पटना)",
+        "Muzaffarpur, Bihar",
+        "Pune, Maharashtra (पुणे)",
+        "Nashik, Maharashtra (नासिक)",
+        "Nagpur, Maharashtra (नागपुर)",
+        "Ahmedabad, Gujarat (अहमदाबाद)",
+        "Rajkot, Gujarat",
+        "Jaipur, Rajasthan (जयपुर)",
+        "Jodhpur, Rajasthan",
+        "Indore, MP (इन्दौर)",
+        "Bhopal, MP (भोपाल)",
+        "Raipur, Chhattisgarh",
+        "Coimbatore, Tamil Nadu (கோயம்புத்தூர்)",
+        "Madurai, Tamil Nadu (மதுரை)",
+        "Thanjavur, Tamil Nadu",
+        "Bengaluru, Karnataka (ಬೆಂಗಳೂರು)",
+        "Belagavi, Karnataka (ಬೆಳಗಾವಿ)",
+        "Mysuru, Karnataka (ಮೈಸೂರು)",
+        "Kochi, Kerala",
+        "Palakkad, Kerala",
+        "Guntur, Andhra Pradesh (గుంటూరు)",
+        "Nellore, Andhra Pradesh (నెల్లూరు)",
+        "Madanapalle, Andhra Pradesh (మదనపల్లె)",
+        "Tirupati, Andhra Pradesh (తిరుపతి)",
+        "Kurnool, Andhra Pradesh (కర్నూలు)",
+        "Vijayawada, Andhra Pradesh (విజయవాడ)",
+        "Anantapur, Andhra Pradesh (అనంతపురం)",
+        "Visakhapatnam, Andhra Pradesh (విశాఖపట్నం)",
+        "Hyderabad, Telangana (హైదరాబాద్)",
+        "Warangal, Telangana (వరంగల్)",
+        "Karimnagar, Telangana (కరీంనగర్)",
+        "Khammam, Telangana (ఖమ్మం)",
+        "Kolkata, West Bengal (कोलकाता)",
+        "Bhubaneswar, Odisha (भुवनेश्वर)",
+        "Guwahati, Assam (गुवाहाटी)"
     ]
     
     preset_choice = st.selectbox(
@@ -415,8 +440,8 @@ with st.sidebar:
         label_visibility="collapsed",
         key="quick_district_select"
     )
-    if preset_choice and preset_choice != "-- Select / Search District --":
-        clean_selected = preset_choice.split(" ")[0].strip()
+    if preset_choice and preset_choice != "-- Select District / State --":
+        clean_selected = preset_choice.split(",")[0].strip()
         geo_res = geocode_location_strict(clean_selected)
         if geo_res and geo_res["display_name"] != st.session_state.active_location_name:
             st.session_state.current_lat = geo_res["latitude"]
