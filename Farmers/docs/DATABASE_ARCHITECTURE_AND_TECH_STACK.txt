@@ -1,0 +1,122 @@
+================================================================================
+🌾 KISAN MITRA AI — COMPLETE DATABASE STRUCTURE & TECH STACK GUIDE
+Problem Statement: I-NXS-010 — Multilingual AI Farmer Advisory Assistant
+================================================================================
+
+================================================================================
+🗄️ PART 1: COMPLETE DATABASE ARCHITECTURE (SQLite3: farm_ledger.db)
+================================================================================
+
+Database File Location: src/database/farm_ledger.db
+Database Engine: Relational SQLite3 with Parameterized Queries & Foreign Keys
+
+--------------------------------------------------------------------------------
+1. ENTITY RELATIONSHIP (ER) DIAGRAM
+--------------------------------------------------------------------------------
+
+  ┌───────────────────────────┐         ┌──────────────────────────────┐
+  │       TABLE: users        │ 1     N │     TABLE: chat_history      │
+  ├───────────────────────────┤─────────┼──────────────────────────────┤
+  │ id (PK)                   │         │ id (PK)                      │
+  │ username (Unique)         │         │ user_id (FK -> users.id)     │
+  │ password_hash (SHA-256)   │         │ session_id (UUID)            │
+  │ full_name                 │         │ role ('user' / 'assistant')  │
+  │ location                  │         │ content (Message Text)       │
+  │ acres                     │         │ created_at (Timestamp)       │
+  │ email                     │         └──────────────────────────────┘
+  │ phone                     │
+  │ created_at                │         ┌──────────────────────────────┐
+  └───────────────────────────┘ 1     N │ TABLE: diagnostics_history   │
+                                ├───────┼──────────────────────────────┤
+                                │       │ id (PK)                      │
+                                │       │ user_id (FK -> users.id)     │
+                                │       │ member_name                  │
+                                │       │ location, latitude, longitude│
+                                │       │ crop, diagnosis, confidence  │
+                                │       │ prescription, severity       │
+                                │       │ timestamp (Timestamp)        │
+                                │       └──────────────────────────────┘
+
+--------------------------------------------------------------------------------
+2. DETAILED TABLE DEFINITIONS & COLUMNS
+--------------------------------------------------------------------------------
+
+TABLE 1: `users` (Farmer Profiles & Authentication)
+- `id` INTEGER PRIMARY KEY AUTOINCREMENT — Unique farmer ID.
+- `username` TEXT UNIQUE NOT NULL — Login username (e.g. 'yaswanth7462').
+- `password_hash` TEXT NOT NULL — SHA-256 cryptographic password hash.
+- `full_name` TEXT — Farmer's full name (e.g. 'Yaswanth').
+- `location` TEXT DEFAULT 'India' — Farmer's home village/district.
+- `acres` REAL DEFAULT 2.0 — Landholding size in acres.
+- `email` TEXT — Email address for automated PDF dispatch.
+- `phone` TEXT — 10-digit mobile number for SMS/IVR authentication.
+- `created_at` TEXT — Registration timestamp (YYYY-MM-DD HH:MM).
+
+TABLE 2: `chat_history` (Advisory Conversation Sessions)
+- `id` INTEGER PRIMARY KEY AUTOINCREMENT — Message ID.
+- `user_id` INTEGER — Foreign key referencing `users.id`.
+- `session_id` TEXT NOT NULL — UUID string grouping conversation turns.
+- `role` TEXT NOT NULL — 'user' (farmer) or 'assistant' (AI agronomist).
+- `content` TEXT NOT NULL — Spoken/written message or AI response.
+- `created_at` TEXT — Exact timestamp (YYYY-MM-DD HH:MM:SS).
+
+TABLE 3: `diagnostics_history` (Spatial Outbreak Radar Telemetry)
+- `id` INTEGER PRIMARY KEY AUTOINCREMENT — Incident ID.
+- `user_id` INTEGER — Foreign key referencing `users.id`.
+- `timestamp` TEXT — Date & time of the leaf scan.
+- `member_name` TEXT — Reporting farmer's name.
+- `location` TEXT — Village/District name.
+- `latitude` REAL — GPS Latitude coordinate (e.g. 13.5580).
+- `longitude` REAL — GPS Longitude coordinate (e.g. 78.5020).
+- `crop` TEXT — Affected plant (e.g. 'Tomato', 'Paddy').
+- `diagnosis` TEXT — Identified disease name (e.g. 'Early Blight').
+- `confidence` REAL — Neural network confidence score (e.g. 0.94).
+- `prescription` TEXT — Dual Organic (ZBNF) + Chemical remedy.
+- `severity` TEXT — Risk level ('🔴 High Risk', '🟡 Moderate').
+
+================================================================================
+🛠️ PART 2: COMPLETE TECH STACK & COMPONENTS USED IN KISAN MITRA
+================================================================================
+
+1. FRONTEND & UI FRAMEWORK:
+- Streamlit (Python-based reactive web application framework)
+- Custom CSS3 Glassmorphism & Responsive Indian Language Typography
+- HTML5 Canvas & Geolocation Web API for 1-click GPS device capture
+
+2. GENERATIVE AI & LLM ENGINES:
+- Google Gemini 2.5 Flash Multimodal LLM via `google-genai` SDK
+- Dual API Key Failover Pool (Automatic rotation between Key 1 and Key 2)
+- CIB&RC Chemical Safety & Toxicity Interceptor Engine
+
+3. EDGE COMPUTER VISION:
+- ONNX Runtime (CPU multi-threaded graph optimization: ORT_ENABLE_ALL)
+- MobileNetV2 Neural Network (<15ms local foliar disease inference)
+- PIL / Pillow & NumPy for image preprocessing & tensor transformations
+
+4. SPEECH & VOICE RECOGNITION (6 LANGUAGES):
+- SpeechRecognition Library (Capturing audio from WebRTC microphones)
+- Microsoft Edge-TTS & Google gTTS (Vernacular Indian text-to-speech)
+- Native 6-Language Support: Telugu, Hindi, English, Tamil, Kannada, Marathi
+
+5. EXTERNAL APIS & REAL-TIME DATA:
+- Open-Meteo Meteorological Radar API (Live hourly weather & spray advisories)
+- OpenStreetMap Nominatim API (Geocoding village names to GPS coordinates)
+- Google SMTP Server (`smtp.gmail.com` via TLS 587 with Google App Password)
+
+6. DOCUMENT & REPORT GENERATION:
+- ReportLab Enterprise PDF Engine (2-Page Master Farm Health Dossier)
+- Automatic PDF Email Dispatcher via Python `smtplib` and `email.mime`
+
+7. MATHEMATICAL & AGRONOMIC EQUATIONS IMPLEMENTED:
+- Haversine Great-Circle Spatial Equation (Geodesic distance calculation)
+- FAO-56 Penman-Monteith Evapotranspiration Model (Daily water loss & pump runtime)
+- NPK Stoichiometric Balancing Model (Translates soil tests to Urea/DAP/MOP bags)
+- A2+FL Cost-of-Cultivation Economic Forecasting Model
+
+8. RURAL TELECOM & OFFLINE ENGINE:
+- GSM 03.38 7-bit Encoding Engine (Strict <=160 char SMS payload validation)
+- Simulated USSD *144# & Automated Outbound IVR Voice Callback Engine
+
+================================================================================
+Generated for Kisan Mitra AI • 2026 National AI Hackathon (₹50,000 Prize)
+================================================================================

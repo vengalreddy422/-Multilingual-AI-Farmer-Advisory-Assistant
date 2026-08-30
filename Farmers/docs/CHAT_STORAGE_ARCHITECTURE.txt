@@ -1,0 +1,102 @@
+================================================================================
+🌾 KISAN MITRA AI — CHAT STORAGE & DATABASE ARCHITECTURE GUIDE
+Problem Statement: I-NXS-010 — Multilingual AI Farmer Advisory Assistant
+================================================================================
+
+--------------------------------------------------------------------------------
+1. OVERVIEW: HOW CHAT HISTORY IS STORED IN KISAN MITRA
+--------------------------------------------------------------------------------
+In Kisan Mitra, every voice query, text message, and AI agronomist response is 
+automatically stored in a persistent relational SQLite database:
+📁 Location: src/database/farm_ledger.db
+
+Unlike temporary chat apps that lose history when you refresh the browser, 
+Kisan Mitra permanently records conversations linked to the farmer's unique 
+account ID, enabling long-term agricultural record-keeping across seasons.
+
+--------------------------------------------------------------------------------
+2. DATABASE SCHEMA DESIGN (SQL TABLES)
+--------------------------------------------------------------------------------
+
+TABLE 1: `users` (Farmer Account Records)
+- `id` INTEGER PRIMARY KEY AUTOINCREMENT
+- `username` TEXT UNIQUE NOT NULL (e.g., 'yaswanth7462')
+- `password_hash` TEXT NOT NULL (SHA-256 encrypted)
+- `full_name` TEXT (e.g., 'Yaswanth')
+- `location` TEXT (e.g., 'Madanapalle, Andhra Pradesh')
+- `acres` REAL (e.g., 2.5)
+- `email` TEXT (e.g., 'vallemvengalreddy2005@gmail.com')
+- `phone` TEXT (e.g., '9391651749')
+- `created_at` TEXT
+
+TABLE 2: `chat_history` (Conversation Sessions & Messages)
+- `id` INTEGER PRIMARY KEY AUTOINCREMENT
+- `user_id` INTEGER (Foreign Key referencing users.id)
+- `session_id` TEXT (Unique UUID for each chat topic, e.g., '8f4c-...')
+- `role` TEXT ('user' for farmer, 'assistant' for AI agronomist)
+- `content` TEXT (The text message / diagnosis / prescription)
+- `created_at` TEXT (Timestamp format: YYYY-MM-DD HH:MM:SS)
+
+TABLE 3: `diagnostics_history` (Geotagged Pest Outbreak Telemetry)
+- `id` INTEGER PRIMARY KEY AUTOINCREMENT
+- `user_id` INTEGER
+- `timestamp` TEXT
+- `member_name` TEXT
+- `location` TEXT
+- `latitude` REAL (GPS Latitude)
+- `longitude` REAL (GPS Longitude)
+- `crop` TEXT (e.g., 'Tomato', 'Paddy')
+- `diagnosis` TEXT (e.g., 'Yellow Leaf Curl Virus')
+- `confidence` REAL (e.g., 0.94)
+- `prescription` TEXT
+- `severity` TEXT ('High Risk', 'Moderate')
+
+--------------------------------------------------------------------------------
+3. STEP-BY-STEP DATA FLOW: HOW MESSAGES ARE SAVED & RELOADED
+--------------------------------------------------------------------------------
+
+STEP 1: Farmer Sends Voice or Text Query
+- The farmer speaks into the microphone (in Telugu/Hindi/English/etc.) or types.
+- The system generates a `session_id` (UUID) if it is a new topic.
+
+STEP 2: Automated Storage (save_chat_message)
+- When the query is sent, `save_chat_message(user_id, session_id, 'user', query)` 
+  inserts the question into SQLite.
+- When Gemini AI returns the CIB&RC-audited answer, `save_chat_message(user_id, 
+  session_id, 'assistant', gemini_reply)` inserts the agronomist response.
+
+STEP 3: Dynamic Session Title Generation (get_user_chat_sessions)
+- The system groups messages by `session_id`.
+- The first user query is automatically truncated to 28 characters and used as the 
+  readable chat title (e.g. "💬 Tomato Leaf Curl Virus...").
+
+STEP 4: Sidebar Navigation & 1-Click Reload
+- Open the Left Sidebar in the web app under "💬 Chat History".
+- Clicking on any previous session triggers `load_session_messages(session_id)`.
+- Streamlit instantly reloads all past questions, answers, and audio playbacks.
+
+STEP 5: Session Deletion & New Chat
+- Clicking "➕ New Advisory Session" creates a fresh `session_id` without deleting 
+  old records.
+- Clicking the "🗑️" trash icon triggers `delete_user_session(user_id, session_id)` 
+  to cleanly remove old conversations from SQLite.
+
+--------------------------------------------------------------------------------
+4. WHAT TO TELL HACKATHON JUDGES ABOUT CHAT STORAGE
+--------------------------------------------------------------------------------
+
+JUDGE QUESTION: "How do you store previous chats and ensure data privacy?"
+
+WINNING ANSWER:
+"Every consultation is stored in a local relational SQLite database (`farm_ledger.db`) 
+linked to the farmer's unique account ID. 
+1. Long-Term Continuity: Farmers can revisit crop treatment prescriptions from last 
+   month or previous crop seasons even if internet connectivity is intermittent.
+2. Relational Schema: We structure data into parameterized tables (`users`, 
+   `chat_history`, `diagnostics_history`) preventing SQL injection.
+3. Scalability: Because the storage is decoupled from the UI, our SQLite ledger 
+   can easily be migrated to PostgreSQL / AWS RDS for multi-node deployments."
+
+================================================================================
+Generated for Kisan Mitra AI • 2026 National AI Hackathon
+================================================================================

@@ -36,10 +36,14 @@ class AgriSafetyGuardrails:
         q_lower = query.lower()
         
         # Jailbreak keywords
-        jailbreak_triggers = ["ignore all previous instructions", "system prompt", "act as a python coder", "write a virus", "bypass rules"]
+        jailbreak_triggers = [
+            "ignore all previous", "ignore previous", "ignore instructions", "system prompt", 
+            "act as a", "write a virus", "write a python", "write code", "bypass rules", 
+            "jailbreak", "prompt injection", "dan mode", "developer mode"
+        ]
         for trigger in jailbreak_triggers:
             if trigger in q_lower:
-                return False, "⚠️ **Security Guardrail Alert:** Out-of-domain prompt detected. Kisan Mitra only processes agricultural and agronomic inquiries."
+                return False, "⚠️ **Security Guardrail Alert:** Out-of-domain prompt detected. Kisan Mitra AI is strictly restricted to certified agricultural and agronomic inquiries."
 
         return True, ""
 

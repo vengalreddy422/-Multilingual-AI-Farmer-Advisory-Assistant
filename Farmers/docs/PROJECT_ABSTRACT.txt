@@ -1,0 +1,67 @@
+================================================================================
+🌾 KISAN MITRA AI — OFFICIAL PROJECT ABSTRACT
+Problem Statement: I-NXS-010 — Multilingual AI Farmer Advisory Assistant
+Domain: Artificial Intelligence in Agriculture & Rural Edge Computing
+================================================================================
+
+--------------------------------------------------------------------------------
+📄 1. SHORT ABSTRACT (FOR HACKATHON SUBMISSION FORMS / PPT SLIDES)
+--------------------------------------------------------------------------------
+Title: Kisan Mitra: Autonomous Multilingual AI Agricultural Advisory & Crop Defense System
+
+Abstract:
+India's 140 million smallholder farmers face severe productivity losses due to 
+delayed foliar disease diagnosis, linguistic barriers, toxic chemical overdosing, 
+and poor digital connectivity. Kisan Mitra is an autonomous, decentralized 
+agricultural operating system delivering precision agronomic intelligence in 6 Indian 
+languages (Telugu, Hindi, English, Tamil, Kannada, Marathi). The platform unites 
+multimodal Generative AI (Gemini 2.5 Flash), on-device edge neural vision (MobileNetV2 
+via ONNX Runtime with <15ms latency), real-time crowdsourced spatial GPS pest outbreak 
+telemetry, and an offline GSM SMS/IVR engine for 2G keypad phones. Integrated with 
+CIB&RC chemical safety guardrails, FAO-56 evapotranspiration irrigation modeling, 
+and live APMC mandi price indices, Kisan Mitra generates official 2-Page Master Farm 
+Health Dossiers (PDF) and automatically dispatches them via live SMTP, transforming 
+scientific agricultural research into accessible, safe, and zero-internet-ready 
+decisions for rural India.
+
+--------------------------------------------------------------------------------
+📄 2. EXTENDED TECHNICAL ABSTRACT (FOR PROJECT REPORT & JUDGING DOSSIER)
+--------------------------------------------------------------------------------
+Title: Kisan Mitra: A Decentralized Multimodal AI Platform for Precision Agronomy, 
+Epidemiological Pest Surveillance, and Rural Zero-Connectivity Delivery
+
+Abstract:
+Agricultural advisory systems in developing nations often fail due to three fundamental 
+bottlenecks: high digital illiteracy, lack of high-speed 4G connectivity in remote 
+fields, and the dangerous hallucination of banned chemicals by generic LLMs. To resolve 
+these challenges, we present Kisan Mitra—an integrated, multi-tier agricultural AI 
+platform developed under Problem Statement I-NXS-010. 
+
+Kisan Mitra features a conversational voice-to-voice AI agronomist grounded in ICAR 
+standards and guarded by an autonomous CIB&RC (Central Insecticides Board & Registration 
+Committee) safety engine that intercepts banned pesticides and caps foliar chemical 
+concentrations (<15 ml/L) with mandatory Pre-Harvest Intervals (PHI). For rapid disease 
+detection, the system incorporates an optimized edge neural network (MobileNetV2) 
+quantized with ONNX Runtime, diagnosing 38+ plant pathologies on standard CPU hardware 
+in under 15 milliseconds. 
+
+To prevent regional crop devastation, diagnosed incidents are geotagged in a relational 
+SQLite ledger (`farm_ledger.db`), triggering Haversine spatial proximity algorithms 
+that alert neighboring farmers within a 60 km radius through an interactive Pest 
+Outbreak Radar. For the 60%+ rural demographic operating basic feature phones without 
+internet, the system deploys a GSM 03.38-compliant SMS parser and automated IVR voice 
+callback simulator delivering compact <=160 character prescriptions. 
+
+Furthermore, the architecture embeds mathematical engines for FAO-56 Penman-Monteith 
+evapotranspiration water budgeting, stoichiometric soil NPK balancing, live APMC mandi 
+pricing, and automated 2-page Master Farm Dossier PDF compilation with real-time SMTP 
+dispatch. Kisan Mitra represents a scalable, enterprise-grade, and resilient bridge 
+between cutting-edge AI and grassroots agricultural empowerment.
+
+--------------------------------------------------------------------------------
+🔑 KEYWORDS:
+Precision Agriculture, Multilingual Voice AI, Edge Computer Vision, ONNX Runtime, 
+CIB&RC Chemical Guardrails, Spatial Epidemiological Radar, Offline GSM/IVR, Gemini 2.5 Flash.
+================================================================================
+Generated for Kisan Mitra AI • 2026 National AI Hackathon (₹50,000 Prize)
+================================================================================

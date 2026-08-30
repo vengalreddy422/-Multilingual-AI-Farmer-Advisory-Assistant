@@ -1,0 +1,207 @@
+================================================================================
+🌾 KISAN MITRA AI — COMPLETE PPT SLIDE-BY-SLIDE PRESENTATION DECK
+Problem Statement: I-NXS-010 — Multilingual AI Farmer Advisory Assistant
+National AI Hackathon 2026 (₹50,000 Grand Prize Edition)
+================================================================================
+
+--------------------------------------------------------------------------------
+SLIDE 1: TITLE & TEAM SLIDE
+--------------------------------------------------------------------------------
+[HEADER]: 🌾 Kisan Mitra (किसान मित्र / కిసాన్ మిత్ర)
+[SUBTITLE]: Autonomous Multilingual AI Agricultural Advisory & Crop Defense System
+[BADGE]: Problem Statement ID: I-NXS-010
+[PRESENTER]: Hackathon Innovation Team
+
+[SPEAKER SCRIPT / WHAT TO SAY]:
+"Good morning respected judges. We are proud to present Kisan Mitra — a full-stack, 
+decentralized agricultural operating system designed to deliver instant, 
+multilingual, scientific, and zero-internet-ready agricultural advisory to over 
+140 million smallholder Indian farmers."
+
+--------------------------------------------------------------------------------
+SLIDE 2: THE PROBLEM (WHY INDIAN FARMERS ARE SUFFERING)
+--------------------------------------------------------------------------------
+[HEADER]: The Crisis in Indian Agriculture
+[KEY BULLET POINTS]:
+• 1:1000 Extension Gap: India has only 1 agricultural extension officer for every 
+  1,162 farmers, causing weeks of delay in diagnosing crop diseases.
+• Chemical Misuse & Crop Scorching: Farmers spend ₹15,000+/acre on wrong or toxic 
+  pesticides without knowing CIB&RC banned lists or safe concentration limits.
+• 60%+ Rural Digital Divide: Most smallholders operate basic 2G keypad phones and 
+  lack reliable 4G internet in the field, making apps and Google search useless.
+• Language & Literacy Barriers: Scientific ICAR research is published in English, 
+  leaving non-literate farmers at the mercy of pesticide dealers.
+
+[SPEAKER SCRIPT / WHAT TO SAY]:
+"Judges, smallholder farmers lose up to 35% of their yield every season simply 
+because they cannot get expert advice in time, don't have 4G internet, and end up 
+spraying dangerous chemicals recommended by local retailers."
+
+--------------------------------------------------------------------------------
+SLIDE 3: OUR SOLUTION (KISAN MITRA AT A GLANCE)
+--------------------------------------------------------------------------------
+[HEADER]: Kisan Mitra: The Full-Stack Agronomy Operating System
+[KEY PILLARS]:
+1. 🎙️ Vernacular Voice AI: Natural conversational voice in 6 Indian languages.
+2. 🛡️ CIB&RC Safety Defense: Automatic toxicity screening & Pre-Harvest Intervals.
+3. 📷 On-Device Leaf Doctor: Sub-15ms edge neural disease detection via ONNX.
+4. 🚨 Spatial GPS Pest Radar: Crowd-sourced real-time outbreak early warning.
+5. 📱 Rural 2G GSM SMS/IVR: Single-payload 160-char SMS & automated voice calls.
+6. 📜 Automated Master Dossier: 2-page PDF health card emailed automatically.
+
+[SPEAKER SCRIPT / WHAT TO SAY]:
+"Kisan Mitra is not just a chatbot. It is a complete farm operating system that 
+combines voice AI, computer vision, spatial telemetry, offline SMS, and soil 
+physics into an actionable platform for every farmer."
+
+--------------------------------------------------------------------------------
+SLIDE 4: SYSTEM ARCHITECTURE & DATA FLOW
+--------------------------------------------------------------------------------
+[HEADER]: End-to-End System Architecture
+[VISUAL DIAGRAM]:
+
+  Farmer Interface (Voice / Image / Text / 2G SMS)
+                      │
+                      ▼
+         ┌─────────────────────────┐
+         │ Streamlit / GSM Gateway │
+         └────────────┬────────────┘
+                      │
+        ┌─────────────┼─────────────┬─────────────┐
+        ▼             ▼             ▼             ▼
+   [Voice STT/TTS] [Edge Vision] [Spatial GPS] [Live Radars]
+    SpeechRecog     MobileNetV2   SQLite DB     Open-Meteo
+    Edge-TTS        ONNX (<15ms)  Haversine     APMC Mandi
+        │             │             │             │
+        └─────────────┼─────────────┴─────────────┘
+                      │
+                      ▼
+         ┌─────────────────────────┐
+         │ CIB&RC Guardrail Engine │  <-- Audits Toxicity (<15ml/L) & PHI
+         └────────────┬────────────┘
+                      │
+                      ▼
+         ┌─────────────────────────┐
+         │ Gemini 2.5 Flash LLM    │  <-- Dual-Key Failover Pool
+         └────────────┬────────────┘
+                      │
+        ┌─────────────┴─────────────┐
+        ▼                           ▼
+   [Live Audio & UI]          [Automated SMTP]
+   Multi-Language Speech      2-Page PDF Dossier
+
+--------------------------------------------------------------------------------
+SLIDE 5: MULTILINGUAL VOICE AI & CIB&RC CHEMICAL DEFENSE
+--------------------------------------------------------------------------------
+[HEADER]: Voice-to-Voice AI with Autonomous Safety Guardrails
+[KEY FEATURES]:
+• 6 Indian Languages: Telugu, Hindi, English, Tamil, Kannada, and Marathi.
+• Dual Prescription: Provides both Zero Budget Natural Farming (ZBNF) biological 
+  remedies (Jeevamrutha, Neemastra, Trichoderma) AND certified chemical medicine.
+• Regulatory Interceptor: Blocks banned pesticides (Endosulfan, Paraquat, 
+  Monocrotophos) and caps concentration thresholds to prevent leaf burns.
+• Pre-Harvest Interval (PHI): Enforces mandatory harvest waiting periods to 
+  guarantee consumer food safety.
+
+[SPEAKER SCRIPT / WHAT TO SAY]:
+"Our AI does not just give generic answers. Every response is audited against 
+government safety standards so farmers never receive harmful chemical dosages."
+
+--------------------------------------------------------------------------------
+SLIDE 6: ON-DEVICE LEAF DOCTOR VISION (<15ms LATENCY)
+--------------------------------------------------------------------------------
+[HEADER]: Instant Foliar Diagnostics on the Edge
+[KEY METRICS]:
+• Model Architecture: MobileNetV2 with inverted residual depthwise convolutions.
+• Edge Runtime: Quantized via ONNX Runtime with CPU multi-threading (ORT_ENABLE_ALL).
+• Speed: Sub-15 millisecond execution time on standard CPU (zero GPU needed).
+• Scope: 38 foliar disease classes across Cotton, Tomato, Rice, Chilli, Maize, etc.
+• Zero Cloud Cost: Runs 100% locally without consuming expensive cloud vision APIs.
+
+[SPEAKER SCRIPT / WHAT TO SAY]:
+"Uploading a 5 MB leaf image over 2G fails. Our vision model runs directly on the 
+device in under 15 milliseconds, giving the farmer an instant diagnosis offline."
+
+--------------------------------------------------------------------------------
+SLIDE 7: REAL SPATIAL GPS PEST OUTBREAK SURVEILLANCE RADAR
+--------------------------------------------------------------------------------
+[HEADER]: Hyperlocal Epidemiological Early Warning System
+[KEY INNOVATIONS]:
+• Real SQLite Telemetry: Every diagnosed scan is geotagged in `farm_ledger.db`.
+• Haversine Spherical Distance Math: Calculates geodesic proximity across districts.
+• 60 km Active Radius: Automatically alerts neighboring villages when a high-risk 
+  pest (e.g. Tomato Leaf Curl or Rice Blast) breaks out nearby.
+• Proactive Prevention: Farmers can apply biological bio-pesticides BEFORE the 
+  infestation spreads to their land.
+
+--------------------------------------------------------------------------------
+SLIDE 8: RURAL ZERO-CONNECTIVITY: 2G OFFLINE SMS & IVR
+--------------------------------------------------------------------------------
+[HEADER]: Bridging the Digital Divide with 2G GSM Telephony
+[HOW IT WORKS]:
+• Keypad Phone Friendly: Farmer sends SMS query: `KISAN PEST TOMATO` to 56161.
+• GSM 03.38 7-bit Encoding: Validates message length <= 160 characters to fit in 
+  a single SMS payload, cutting telecom gateway transmission costs by 50%.
+• Automated Voice Callback (IVR): An automated telephone call rings the farmer's 
+  phone and speaks the prescription aloud in their regional language.
+
+[SPEAKER SCRIPT / WHAT TO SAY]:
+"No smartphone? No internet? No problem. A farmer with an ₹800 keypad phone gets 
+the exact same AI-powered advice via SMS and automated voice callbacks."
+
+--------------------------------------------------------------------------------
+SLIDE 9: 2-PAGE MASTER FARM HEALTH DOSSIER (PDF) & SMTP
+--------------------------------------------------------------------------------
+[HEADER]: 1-Click Complete Agricultural Dossier
+[PAGE BREAKDOWN]:
+• Page 1: Farmer Identity, Real-Time Weather Spray Feasibility, Foliar Disease 
+  Diagnosis, and Soil NPK Fertilizer Chemistry.
+• Page 2: Agro-Climatic Suitable Crops Matrix, Live APMC Mandi Trading Rates, 
+  Matched Government Welfare Schemes (PM-KISAN, PMKSY, PMFBY), and Extension Help.
+• Zero-Click Email Dispatch: Automatically emailed in the background via live 
+  Google SMTP over TLS on every scan.
+
+--------------------------------------------------------------------------------
+SLIDE 10: SCIENTIFIC & MATHEMATICAL RIGOR
+--------------------------------------------------------------------------------
+[HEADER]: Mathematical Equations Implemented in Code
+[THE 4 CORE MODELS]:
+1. Haversine Spatial Great-Circle Formula (Pest Proximity):
+   d = 2 * R * arcsin(sqrt(sin²(Δlat/2) + cos(lat1)*cos(lat2)*sin²(Δlon/2)))
+2. FAO-56 Penman-Monteith Evapotranspiration (Smart Irrigation):
+   ETc = ETo * Kc  |  Water Need = (ETc - Pe) * 4046.86 m²/acre
+3. Stoichiometric NPK Balancing (Soil Fertilizer Schedule):
+   Translates N-P-K deficit values into exact bags of Urea (46%), DAP (18-46-0), MOP (60%).
+4. A2+FL Cost-Yield Economics:
+   Net Profit = (Yield * Mandi Price) - (Paid-out Inputs A2 + Family Labor FL).
+
+--------------------------------------------------------------------------------
+SLIDE 11: BUSINESS MODEL, VIABILITY & SCALABILITY
+--------------------------------------------------------------------------------
+[HEADER]: B2B2G Sustainability & Scaling Plan
+[REVENUE & DEPLOYMENT]:
+• 100% Free for Smallholder Farmers: Core advisory and SMS alerts remain free.
+• FPO & Agri-Enterprise SaaS Tier: Farmer Producer Organizations subscribe for 
+  aggregated regional disease analytics and harvest supply forecasting.
+• Government Extension Scaling (B2G): State Agriculture Departments (e.g. Rythu 
+  Bharosa Kendras) deploy Kisan Mitra to scale extension officer reach by 100x.
+• Scalability: Containerized stateless microservices with edge offloading running 
+  80% of compute locally on user devices.
+
+--------------------------------------------------------------------------------
+SLIDE 12: FUTURE ROADMAP & CONCLUSION
+--------------------------------------------------------------------------------
+[HEADER]: Roadmap & Winning Summary
+[NEXT STEPS]:
+• Phase 1 (Completed): 6-Language Voice AI, ONNX Edge Vision, Pest Radar, SMS/IVR, PDF.
+• Phase 2 (Q3 2026): LoRaWAN IoT Soil Moisture/NPK Sensor Integration.
+• Phase 3 (Q4 2026): ISRO / Sentinel-2 Satellite NDVI Vegetation Index Sync.
+• Phase 4 (2027): Agri-Fintech Credit Scoring for Zero-Collateral Crop Loans.
+
+[FINAL PUNCHLINE / CLOSING REMARK]:
+"Kisan Mitra turns every smartphone and keypad phone in rural India into a certified, 
+safe, scientific agricultural expert. Thank you, and we look forward to your questions!"
+
+================================================================================
+Generated for Kisan Mitra AI • 2026 National AI Hackathon (₹50,000 Prize)
+================================================================================
