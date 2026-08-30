@@ -431,28 +431,27 @@ with st.sidebar:
     """, height=44)
 
     # 2. Universal Search (Any Village, Mandal, District, PIN Code in India)
-    c_loc_in, c_loc_btn = st.columns([3.5, 1])
-    with c_loc_in:
-        typed_location = st.text_input(
-            "Search Any Village / Mandal / PIN",
-            value=st.session_state.active_location_name,
-            placeholder="e.g. Nellore, నెల్లూరు, Baramati, 524001...",
-            label_visibility="collapsed",
-            key="custom_loc_input"
-        )
-    with c_loc_btn:
-        set_loc_clicked = st.button("🔍", help="Search & Set Location", use_container_width=True, key="btn_set_loc")
+    with st.form("loc_search_form", clear_on_submit=False):
+        c_loc_in, c_loc_btn = st.columns([3.5, 1.2])
+        with c_loc_in:
+            typed_location = st.text_input(
+                "Search Any Village / Mandal / PIN",
+                value=st.session_state.active_location_name,
+                placeholder="e.g. Nellore, 524001, Guntur, Pune...",
+                label_visibility="collapsed"
+            )
+        with c_loc_btn:
+            submit_loc = st.form_submit_button("🔍 Set", use_container_width=True)
 
-    if set_loc_clicked or (typed_location and typed_location != st.session_state.active_location_name):
-        with st.spinner("Resolving location coordinates..."):
-            geo_res = geocode_location_strict(typed_location)
-            if geo_res:
-                st.session_state.current_lat = geo_res["latitude"]
-                st.session_state.current_lon = geo_res["longitude"]
-                st.session_state.active_location_name = geo_res["display_name"]
-                st.rerun()
-            else:
-                st.warning("⚠️ Location not found. Please verify spelling or try PIN code.")
+    if submit_loc and typed_location:
+        geo_res = geocode_location_strict(typed_location)
+        if geo_res:
+            st.session_state.current_lat = geo_res["latitude"]
+            st.session_state.current_lon = geo_res["longitude"]
+            st.session_state.active_location_name = geo_res["display_name"]
+            st.rerun()
+        else:
+            st.warning("⚠️ Location not found. Please try entering district name or 6-digit PIN code.")
 
     st.markdown("---")
     st.markdown(f"### 🌦️ {t.get('weather', 'Live Local Weather')}")

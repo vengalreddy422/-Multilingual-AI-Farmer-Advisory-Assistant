@@ -7,8 +7,8 @@ def reverse_geocode_coords(lat: float, lon: float) -> str:
     """
     try:
         url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json&zoom=12"
-        headers = {"User-Agent": "KisanMitraUniversalApp/2.0"}
-        res = requests.get(url, headers=headers, timeout=4).json()
+        headers = {"User-Agent": "KisanMitraApp/3.0"}
+        res = requests.get(url, headers=headers, timeout=3).json()
         address = res.get("address", {})
         
         place = (
@@ -27,74 +27,68 @@ def reverse_geocode_coords(lat: float, lon: float) -> str:
 
 def geocode_location_strict(location_query: str) -> Optional[Dict[str, Any]]:
     """
-    Universal Dynamic Geocoder (like Swiggy / Rapido / Google Maps).
-    Resolves ANY village, mandal, district, city, state or 6-digit PIN code across India in any language.
+    Ultra-Fast Universal Geocoder supporting:
+    - Any City, Town, Village, Mandal across all 28 states
+    - Any comma-formatted text (e.g., 'Nellore, Andhra Pradesh', 'Guntur, AP')
+    - 6-Digit Indian Postal PIN codes (e.g. 524001, 500032, 110001)
+    - All Indian Language scripts (Telugu, Hindi, Tamil, Kannada, Marathi, Punjabi, Bengali)
     """
     if not location_query:
         return None
-    clean_name = str(location_query).strip()
-    if len(clean_name) < 2:
+    clean = str(location_query).strip()
+    if len(clean) < 2:
         return None
 
-    # 1. Primary High-Accuracy Global Geocoder (Nominatim OpenStreetMap)
+    primary_name = clean.split(",")[0].strip()
+
+    # 1. High-Speed Open-Meteo Geocoding API (<150ms, No Throttling)
     try:
+        om_url = "https://geocoding-api.open-meteo.com/v1/search"
+        for search_term in [primary_name, clean]:
+            params = {"name": search_term, "count": 1, "language": "en", "format": "json"}
+            res = requests.get(om_url, params=params, timeout=2.5).json()
+            results = res.get("results", [])
+            if results:
+                r = results[0]
+                city = r.get("name", primary_name)
+                state = r.get("admin1", r.get("country", "India"))
+                display_name = f"{city}, {state}" if state else str(city)
+                return {
+                    "valid": True,
+                    "city": city,
+                    "state": state,
+                    "display_name": display_name,
+                    "latitude": float(r["latitude"]),
+                    "longitude": float(r["longitude"])
+                }
+    except Exception:
+        pass
+
+    # 2. OpenStreetMap / Nominatim Fallback for remote villages / PIN codes
+    try:
+        headers = {"User-Agent": "KisanMitraApp/3.0"}
         osm_url = "https://nominatim.openstreetmap.org/search"
-        headers = {"User-Agent": "KisanMitraUniversalApp/2.0"}
-        params = {
-            "q": clean_name,
-            "countrycodes": "in",
-            "format": "json",
-            "addressdetails": 1,
-            "limit": 1
-        }
-        osm_res = requests.get(osm_url, params=params, headers=headers, timeout=4).json()
+        params = {"q": clean, "countrycodes": "in", "format": "json", "addressdetails": 1, "limit": 1}
+        osm_res = requests.get(osm_url, params=params, headers=headers, timeout=3.0).json()
         if osm_res and len(osm_res) > 0:
-            top_hit = osm_res[0]
-            lat = float(top_hit["lat"])
-            lon = float(top_hit["lon"])
-            address = top_hit.get("address", {})
-            
+            top = osm_res[0]
+            lat = float(top["lat"])
+            lon = float(top["lon"])
+            address = top.get("address", {})
             city = (
                 address.get("village") or 
                 address.get("town") or 
                 address.get("city") or 
                 address.get("county") or 
                 address.get("state_district") or 
-                top_hit.get("name", clean_name)
+                top.get("name", primary_name)
             )
             state = address.get("state", address.get("country", "India"))
-            display_name = f"{city}, {state}" if state else str(city)
-
             return {
                 "valid": True,
                 "city": city,
                 "state": state,
-                "display_name": display_name,
-                "latitude": lat,
-                "longitude": lon
-            }
-    except Exception:
-        pass
-
-    # 2. Secondary Fast Fallback (Open-Meteo Geocoding Search)
-    try:
-        url = "https://geocoding-api.open-meteo.com/v1/search"
-        params = {"name": clean_name, "count": 1, "language": "en", "format": "json"}
-        res = requests.get(url, params=params, timeout=3).json()
-        results = res.get("results", [])
-        if results:
-            r = results[0]
-            lat = float(r["latitude"])
-            lon = float(r["longitude"])
-            city = r.get("name")
-            admin = r.get("admin1", "")
-            country = r.get("country", "")
-            display_name = f"{city}, {admin}" if admin else f"{city}, {country}"
-            return {
-                "valid": True,
-                "city": city,
-                "state": admin if admin else country,
-                "display_name": display_name,
+                "display_name": f"{city}, {state}" if state else str(city),
                 "latitude": lat,
                 "longitude": lon
             }
@@ -104,7 +98,7 @@ def geocode_location_strict(location_query: str) -> Optional[Dict[str, Any]]:
     return None
 
 def fetch_weather(location_str: str, lat: float = None, lon: float = None) -> Dict[str, Any]:
-    """Fetches real-time weather and precipitation forecasts for exact coordinates."""
+    """Fetches real-time weather and precipitation forecasts."""
     display_location = location_str
     if lat is None or lon is None:
         geo = geocode_location_strict(location_str)
