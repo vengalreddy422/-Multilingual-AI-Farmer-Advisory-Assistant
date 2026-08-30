@@ -452,27 +452,6 @@ with st.sidebar:
             else:
                 st.warning("⚠️ Location not found. Please verify spelling or try PIN code.")
 
-    # 3. Voice Input for Village / Mandal in Any Language
-    st.caption("🎙️ Or Speak Village / Mandal in Your Language:")
-    loc_audio = st.audio_input("Record village", label_visibility="collapsed", key="loc_voice_audio")
-    if loc_audio is not None:
-        try:
-            voice_bytes = loc_audio.read()
-            spoken_loc = transcribe_audio_bytes(voice_bytes, lang_code=st.session_state.lang_key)
-            if spoken_loc:
-                st.success(f"🗣️ {spoken_loc}")
-                with st.spinner("Locating..."):
-                    geo_res = geocode_location_strict(spoken_loc)
-                    if geo_res:
-                        st.session_state.current_lat = geo_res["latitude"]
-                        st.session_state.current_lon = geo_res["longitude"]
-                        st.session_state.active_location_name = geo_res["display_name"]
-                        st.rerun()
-                    else:
-                        st.warning(f"⚠️ Could not find coordinates for: {spoken_loc}")
-        except Exception:
-            pass
-
     st.markdown("---")
     st.markdown(f"### 🌦️ {t.get('weather', 'Live Local Weather')}")
     
