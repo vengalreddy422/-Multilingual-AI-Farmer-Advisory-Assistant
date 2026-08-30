@@ -1,15 +1,16 @@
 from typing import List, Dict, Any
 from src.database.db_ledger import get_nearby_diagnostics, haversine_distance_km
+from src.tools.dynamic_engine import detect_agro_zone_key
 
 def get_regional_pest_profile(lat: float, lon: float, location_name: str) -> List[tuple]:
     """
     Returns the specific endemic crop diseases that actually grow and occur in that geographical zone.
     Grounds sentinel alerts strictly in ICAR regional agro-climatic classifications.
     """
-    loc_lower = location_name.lower()
-    
+    zone_key = detect_agro_zone_key(lat, lon, location_name)
+
     # 1. Himalayan Temperate Zone (Himachal Pradesh, J&K, Uttarakhand)
-    if lat >= 31.0 or any(k in loc_lower for k in ["shimla", "kashmir", "jammu", "mandi", "kullu", "uttarakhand", "dehradun"]):
+    if zone_key == "himalayas":
         return [
             (0.012, 0.015, "Apple", "Apple Scab (Venturia inaequalis)", "🔴 High Risk", "Foliar spray Difenoconazole 25% EC @ 0.5 ml/L + Bio-Neemastra"),
             (-0.018, 0.022, "Apple", "Black Rot (Botryosphaeria)", "🟡 Moderate", "Prune cankered wood and apply Copper Oxychloride 50 WP @ 3g/L"),
@@ -18,25 +19,16 @@ def get_regional_pest_profile(lat: float, lon: float, location_name: str) -> Lis
         ]
 
     # 2. Trans-Gangetic & Northern Plains (Punjab, Haryana, Western UP, Rajasthan)
-    if lat >= 27.5 or any(k in loc_lower for k in ["punjab", "haryana", "ludhiana", "amritsar", "karnal", "hisar", "jaipur", "ganganagar", "meerut"]):
+    if zone_key == "north":
         return [
             (0.012, 0.015, "Wheat", "Yellow / Stripe Rust (Puccinia striiformis)", "🔴 High Risk", "Spray Propiconazole 25% EC @ 1 ml/L immediately at first pustule appearance"),
             (-0.018, 0.022, "Mustard", "Mustard Aphids (Lipaphis erysimi)", "🟡 Moderate", "Spray Thiamethoxam 25% WG @ 0.3 g/L or 5% Neem seed kernel extract (NSKE)"),
             (0.025, -0.014, "Potato", "Late Blight & Early Blight", "🔴 High Risk", "Spray Mancozeb 75 WP @ 2.5 g/L followed by Metalaxyl 8% + Mancozeb 64% WP"),
-            (-0.008, -0.019, "Cotton / Paddy", "Pink Bollworm & Paddy Stem Borer", "🔴 High Risk", "Install Pheromone traps @ 5/acre + Spray Chlorantraniliprole 18.5 SC @ 0.3 ml/L")
+            (-0.008, -0.019, "Cotton / Basmati", "Pink Bollworm & Paddy Stem Borer", "🔴 High Risk", "Install Pheromone traps @ 5/acre + Spray Chlorantraniliprole 18.5 SC @ 0.3 ml/L")
         ]
 
-    # 3. Middle & Upper Gangetic Plains (Eastern UP, Bihar)
-    if (24.0 <= lat < 27.5) and lon <= 87.0:
-        return [
-            (0.012, 0.015, "Paddy (Rice)", "Bacterial Leaf Blight (Xanthomonas)", "🔴 High Risk", "Spray Streptocycline 1g in 10L water + Copper Oxychloride @ 25g"),
-            (-0.018, 0.022, "Wheat", "Brown Rust & Spot Blotch (Bipolaris)", "🟡 Moderate", "Foliar application of Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L"),
-            (0.025, -0.014, "Maize", "Fall Armyworm (Spodoptera frugiperda)", "🔴 High Risk", "Whirl application of Emamectin Benzoate 5% SG @ 0.4 g/L + Agniastra"),
-            (-0.008, -0.019, "Vegetable / Pulses", "Gram Pod Borer (Helicoverpa)", "🟡 Moderate", "Spray Indoxacarb 14.5% SC @ 0.5 ml/L + Pheromone monitoring")
-        ]
-
-    # 4. Western & Central Plateau (Maharashtra, Gujarat, Madhya Pradesh)
-    if (18.0 <= lat <= 24.5) and lon <= 81.0:
+    # 3. Western & Central Plateau (Maharashtra, Gujarat, Madhya Pradesh)
+    if zone_key == "west_central":
         return [
             (0.012, 0.015, "Cotton", "Pink Bollworm & Whitefly Complex", "🔴 High Risk", "Install 8 Pheromone traps/acre; spray Profenofos 50% EC @ 2 ml/L or Neemastra"),
             (-0.018, 0.022, "Soybean", "Soybean Rust & Girdle Beetle", "🟡 Moderate", "Spray Tebuconazole 25.9% EC @ 1.5 ml/L + Dashaparni Kashayam"),
@@ -44,8 +36,8 @@ def get_regional_pest_profile(lat: float, lon: float, location_name: str) -> Lis
             (-0.008, -0.019, "Pomegranate / Grape", "Bacterial Blight & Anthracnose", "🔴 High Risk", "Pruning followed by 1% Bordeaux mixture + Streptocycline 200 ppm")
         ]
 
-    # 5. Eastern Rice & Coastal Belt (West Bengal, Odisha, Assam)
-    if lon >= 83.0 and lat >= 19.0:
+    # 4. Eastern Rice & Coastal Belt (West Bengal, Odisha, Bihar, Assam)
+    if zone_key == "east":
         return [
             (0.012, 0.015, "Paddy (Rice)", "Rice Brown Spot & Sheath Blight", "🔴 High Risk", "Spray Validamycin 3% L @ 2 ml/L or Hexaconazole 5% EC @ 2 ml/L"),
             (-0.018, 0.022, "Paddy (Rice)", "Leaf Blast (Pyricularia oryzae)", "🔴 High Risk", "Apply Tricyclazole 75% WP @ 0.6 g/L at early tillering stage"),
@@ -53,7 +45,7 @@ def get_regional_pest_profile(lat: float, lon: float, location_name: str) -> Lis
             (-0.008, -0.019, "Mustard / Potato", "Alternaria Blight & Aphids", "🟡 Moderate", "Foliar spray of Mancozeb 75 WP @ 2 g/L")
         ]
 
-    # 6. Southern Semi-Arid & Coastal Zone (Andhra Pradesh, Telangana, Karnataka, Tamil Nadu, Kerala)
+    # 5. Southern Semi-Arid & Coastal Zone (Andhra Pradesh, Telangana, Karnataka, Tamil Nadu, Kerala)
     return [
         (0.012, 0.015, "Chilli", "Black Thrips (Thrips parvispinus) & Murda", "🔴 High Risk", "Install Blue Sticky Traps @ 25/acre; Spray Spinetoram 11.7 SC @ 0.8 ml/L or Agniastra"),
         (-0.018, 0.022, "Paddy (Rice)", "Brown Plant Hopper (BPH) & Blast", "🔴 High Risk", "Drain standing water; Spray Triflumezopyrim 10% SC @ 0.5 ml/L or Pymetrozine 50% WDG"),

@@ -35,6 +35,8 @@ import src.tools.weather as weather_module
 importlib.reload(weather_module)
 from src.tools.weather import fetch_weather, geocode_location_strict, reverse_geocode_coords
 from src.tools.soil_advisor import analyze_soil_npk
+import src.tools.dynamic_engine as dynamic_engine_module
+importlib.reload(dynamic_engine_module)
 from src.tools.dynamic_engine import (
     auto_detect_farmer_location,
     get_location_crop_suitability,
