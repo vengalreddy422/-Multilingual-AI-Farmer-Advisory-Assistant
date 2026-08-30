@@ -12,10 +12,200 @@ load_dotenv()
 DATA_GOV_API_KEY = os.getenv("DATA_GOV_API_KEY", "579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b")
 AGMARKNET_RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070"
 
-# --- 1. ICAR 15 AGRO-CLIMATIC ZONE REGIONAL CROP REPOSITORIES ---
+# --- COMPREHENSIVE REGIONAL CROP REPOSITORY (12-18 CROPS PER ZONE) ---
 
 REGIONAL_CROP_REGISTRY: Dict[str, List[Dict[str, Any]]] = {
-    # ZONE 1: Northern Plains & Trans-Gangetic (Punjab, Haryana, Western UP, Rajasthan)
+    # =========================================================================
+    # ZONE 1: SOUTHERN AGRO-CLIMATIC SUITE (ANDHRA PRADESH, TELANGANA, KA, TN)
+    # =========================================================================
+    "south": [
+        {
+            "crop": "Chilli (మిరప / मिर्च)",
+            "category": "High-Value Commercial Spice",
+            "season": "Kharif - Rabi",
+            "optimal_temp": (20, 34),
+            "min_moisture": 0.16,
+            "base_mandi_price": 19200,
+            "price_variance": 850,
+            "base_arrivals": 320,
+            "varieties": "Teja (S17), Byadgi 5531, Armoor, US-341, G-4, Mahi-9",
+            "water_need": "Medium (Drip Fertigation + Mulch)",
+            "soil_pref": "Deep Black Vertisols & Well-Drained Red Sandy Loams"
+        },
+        {
+            "crop": "Paddy / Rice (వరి / धान)",
+            "category": "Cereal Food Grain Staple",
+            "season": "Kharif & Rabi (Yasangi)",
+            "optimal_temp": (22, 36),
+            "min_moisture": 0.22,
+            "base_mandi_price": 2400,
+            "price_variance": 85,
+            "base_arrivals": 580,
+            "varieties": "BPT-5204 (Samba Masuri), MTU-1010, Telangana Sona (RNR 15048), IR-64, Nellore Sona",
+            "water_need": "High (Canal / Borewell / Puddled Bed)",
+            "soil_pref": "Heavy Clayey Clays & Coastal River Alluvium"
+        },
+        {
+            "crop": "Cotton / Kapas (పత్తి / कपास)",
+            "category": "Commercial Cash Fiber",
+            "season": "Kharif (Monsoon)",
+            "optimal_temp": (22, 38),
+            "min_moisture": 0.16,
+            "base_mandi_price": 7350,
+            "price_variance": 320,
+            "base_arrivals": 260,
+            "varieties": "RCH-659 BG-II, Jaadoo, Bunny, Mallika, Kaveri Micro",
+            "water_need": "Medium (500-750 mm)",
+            "soil_pref": "Deep Black Soils & Heavy Alluvial Loams"
+        },
+        {
+            "crop": "Groundnut / Peanut (వేరుశనగ / मूंगफली)",
+            "category": "Oilseed / Legume",
+            "season": "Kharif (Rainfed) & Rabi",
+            "optimal_temp": (22, 34),
+            "min_moisture": 0.13,
+            "base_mandi_price": 6950,
+            "price_variance": 290,
+            "base_arrivals": 140,
+            "varieties": "Kadiri-6, Dharani, TAG-24, K-9, Narayani, Greeshma",
+            "water_need": "Low-to-Medium (Drought Resilient)",
+            "soil_pref": "Red Sandy Loams & Well-aerated Friable Soils"
+        },
+        {
+            "crop": "Tomato (టమాటా / टमाटर)",
+            "category": "Commercial Cash Horticulture",
+            "season": "Year-Round (Kharif, Rabi, Summer)",
+            "optimal_temp": (18, 33),
+            "min_moisture": 0.15,
+            "base_mandi_price": 1850,
+            "price_variance": 380,
+            "base_arrivals": 490,
+            "varieties": "Saaho 3251, Abhinav, US-440, Arka Rakshak, Shivam",
+            "water_need": "Medium (Drip Irrigation Recommended)",
+            "soil_pref": "Red Sandy Loams & Friable Well-Drained Soils"
+        },
+        {
+            "crop": "Red Gram / Toor (కందులు / अरहर)",
+            "category": "High-Protein Pulse",
+            "season": "Kharif Intercrop / Sole",
+            "optimal_temp": (22, 36),
+            "min_moisture": 0.12,
+            "base_mandi_price": 9150,
+            "price_variance": 380,
+            "base_arrivals": 95,
+            "varieties": "LRG-41, PRG-176, ICPL-87119 (Asha), WRG-65",
+            "water_need": "Low (Deep Taproot Drought Tolerant)",
+            "soil_pref": "Deep Loamy & Well-drained Vertisols"
+        },
+        {
+            "crop": "Bengal Gram / Chickpea (శనగలు / चना)",
+            "category": "Rabi Pulse / Cash Crop",
+            "season": "Rabi (Residual Moisture)",
+            "optimal_temp": (15, 30),
+            "min_moisture": 0.14,
+            "base_mandi_price": 6450,
+            "price_variance": 220,
+            "base_arrivals": 130,
+            "varieties": "JG-11, KAK-2 (Kabuli), JAKI-9218, NBeG-3",
+            "water_need": "Low (1-2 Light Irrigations)",
+            "soil_pref": "Heavy Black Soils of Rayalaseema & Telangana"
+        },
+        {
+            "crop": "Black Gram / Urad (మినుములు / उड़द)",
+            "category": "Short-Duration Pulse",
+            "season": "Rabi Rice-Fallow & Kharif",
+            "optimal_temp": (22, 35),
+            "min_moisture": 0.14,
+            "base_mandi_price": 8600,
+            "price_variance": 310,
+            "base_arrivals": 80,
+            "varieties": "LBG-752, LBG-787, PU-31, TBG-104",
+            "water_need": "Low (Rice fallow zero-tillage moisture)",
+            "soil_pref": "Coastal Delta Alluvial & Loamy Clays"
+        },
+        {
+            "crop": "Green Gram / Moong (పెసలు / मूंग)",
+            "category": "Catch Crop Pulse",
+            "season": "Summer & Kharif",
+            "optimal_temp": (24, 38),
+            "min_moisture": 0.12,
+            "base_mandi_price": 8450,
+            "price_variance": 290,
+            "base_arrivals": 75,
+            "varieties": "WGG-42, MGG-295, IPM-02-03, Samrat",
+            "water_need": "Low (Short 65-day cycle)",
+            "soil_pref": "Well-drained Loams and Red Sandy soils"
+        },
+        {
+            "crop": "Turmeric (పసుపు / हल्दी)",
+            "category": "Commercial Rhizome Spice",
+            "season": "Kharif Planting (8-9 Month)",
+            "optimal_temp": (22, 35),
+            "min_moisture": 0.20,
+            "base_mandi_price": 14200,
+            "price_variance": 700,
+            "base_arrivals": 80,
+            "varieties": "Duggirala, Armoor, Prathibha, Salem, Alleppey Supreme",
+            "water_need": "High (Frequent Irrigation)",
+            "soil_pref": "Deep Rich Sandy Loams with zero water stagnation"
+        },
+        {
+            "crop": "Sugarcane (చెరకు / गन्ना)",
+            "category": "Commercial Cash Crop",
+            "season": "Annual (10-12 Months)",
+            "optimal_temp": (22, 38),
+            "min_moisture": 0.24,
+            "base_mandi_price": 3200,
+            "price_variance": 50,
+            "base_arrivals": 750,
+            "varieties": "Co-86032, CoV-92102, Co-99004, Co-0238",
+            "water_need": "Very High (1500-2000 mm)",
+            "soil_pref": "Deep River Alluvium & Heavy Well-Drained Clays"
+        },
+        {
+            "crop": "Banana (అరటి / केला)",
+            "category": "High-Density Fruit Crop",
+            "season": "Year-Round Planting",
+            "optimal_temp": (20, 36),
+            "min_moisture": 0.22,
+            "base_mandi_price": 1850,
+            "price_variance": 320,
+            "base_arrivals": 340,
+            "varieties": "Grand Naine (G9), Robusta, Karpuravalli, Yelakki",
+            "water_need": "High (Drip Fertigation Mandatory)",
+            "soil_pref": "Deep Rich Alluvial Clays & Loams"
+        },
+        {
+            "crop": "Maize / Corn (మొక్కజొన్న / मक्का)",
+            "category": "Cereal Feed Grain",
+            "season": "Kharif & Rabi",
+            "optimal_temp": (18, 35),
+            "min_moisture": 0.16,
+            "base_mandi_price": 2240,
+            "price_variance": 95,
+            "base_arrivals": 360,
+            "varieties": "DKC-9108, Pioneer P3396, NK-6240, Kaveri 50",
+            "water_need": "Medium (3-4 irrigations)",
+            "soil_pref": "Well-drained Fertile Loams"
+        },
+        {
+            "crop": "Ragi / Finger Millet (రాగులు / मड़ुआ)",
+            "category": "Nutri-Cereal Millet",
+            "season": "Kharif & Summer",
+            "optimal_temp": (18, 36),
+            "min_moisture": 0.10,
+            "base_mandi_price": 4290,
+            "price_variance": 90,
+            "base_arrivals": 60,
+            "varieties": "GPU-28, ML-365, Vakula, Bharathi, PR-202",
+            "water_need": "Very Low (Drought Resilient)",
+            "soil_pref": "Marginal, Shallow, Gravelly & Sandy Soils"
+        }
+    ],
+
+    # =========================================================================
+    # ZONE 2: NORTHERN & TRANS-GANGETIC (PUNJAB, HARYANA, WESTERN UP, RAJASTHAN)
+    # =========================================================================
     "north": [
         {
             "crop": "Wheat (గోధుమ / गेहूं)",
@@ -81,10 +271,38 @@ REGIONAL_CROP_REGISTRY: Dict[str, List[Dict[str, Any]]] = {
             "varieties": "RCH-659 BG-II, Bunny Bt, Ankur-3028",
             "water_need": "Medium (Canal/Subsoil moisture)",
             "soil_pref": "Deep Alluvial Loams & Fertile Indo-Gangetic Plains"
+        },
+        {
+            "crop": "Sugarcane (చెరకు / गन्ना)",
+            "category": "Commercial Cash Crop",
+            "season": "Spring / Autumn",
+            "optimal_temp": (20, 38),
+            "min_moisture": 0.24,
+            "base_mandi_price": 3400,
+            "price_variance": 60,
+            "base_arrivals": 820,
+            "varieties": "Co-0238, Co-15023, Co-0118",
+            "water_need": "High",
+            "soil_pref": "Deep Alluvial Fertile Loams"
+        },
+        {
+            "crop": "Pearl Millet / Bajra (సజ్జలు / बाजरा)",
+            "category": "Nutri-Cereal Dryland",
+            "season": "Kharif",
+            "optimal_temp": (25, 40),
+            "min_moisture": 0.10,
+            "base_mandi_price": 2550,
+            "price_variance": 110,
+            "base_arrivals": 220,
+            "varieties": "HHB-67, RHB-177, GHB-558, MPMH-17",
+            "water_need": "Very Low (Drought Hardy)",
+            "soil_pref": "Sandy & Semi-Arid Light Soils of Rajasthan/Haryana"
         }
     ],
 
-    # ZONE 2: Western & Central Plateau (Maharashtra, Gujarat, Madhya Pradesh)
+    # =========================================================================
+    # ZONE 3: WESTERN & CENTRAL PLATEAU (MAHARASHTRA, GUJARAT, MP)
+    # =========================================================================
     "west_central": [
         {
             "crop": "Cotton (పత్తి / कपास)",
@@ -126,7 +344,7 @@ REGIONAL_CROP_REGISTRY: Dict[str, List[Dict[str, Any]]] = {
             "soil_pref": "Rich Sandy Loams & Well-aerated Red/Black Loams"
         },
         {
-            "crop": "Grapes / Pomegranate (ద్రాక్ష / దానిమ్మ / अनार)",
+            "crop": "Grapes & Pomegranate (ద్రాక్ష / దానిమ్మ)",
             "category": "High-Density Fruit Export",
             "season": "Perennial (Pruning Cycles)",
             "optimal_temp": (18, 35),
@@ -150,92 +368,38 @@ REGIONAL_CROP_REGISTRY: Dict[str, List[Dict[str, Any]]] = {
             "varieties": "Co-86032, CoM-0265, Co-92005",
             "water_need": "Very High (1500-2000 mm)",
             "soil_pref": "Deep Vertisols & Heavy Loams with Canal Access"
+        },
+        {
+            "crop": "Bengal Gram / Dollar Chana (శనగలు / चना)",
+            "category": "Rabi Pulse",
+            "season": "Rabi",
+            "optimal_temp": (15, 28),
+            "min_moisture": 0.14,
+            "base_mandi_price": 6800,
+            "price_variance": 240,
+            "base_arrivals": 190,
+            "varieties": "Dollar Chana, JG-11, Phule Vikram, Digvijay",
+            "water_need": "Low",
+            "soil_pref": "Medium-to-Deep Black Soils"
+        },
+        {
+            "crop": "Jowar / Sorghum (జొన్నలు / ज्वार)",
+            "category": "Nutri-Cereal Staple",
+            "season": "Rabi (Maldandi) & Kharif",
+            "optimal_temp": (20, 36),
+            "min_moisture": 0.12,
+            "base_mandi_price": 3450,
+            "price_variance": 120,
+            "base_arrivals": 160,
+            "varieties": "Maldandi M 35-1, CSH-16, Phule Yashoda",
+            "water_need": "Low (Drought Resilient)",
+            "soil_pref": "Medium-to-Deep Black Soils"
         }
     ],
 
-    # ZONE 3: Southern Semi-Arid & Coastal (Andhra Pradesh, Telangana, Karnataka, Tamil Nadu, Kerala)
-    "south": [
-        {
-            "crop": "Chilli (మిరప / मिर्च)",
-            "category": "High-Value Commercial Spice",
-            "season": "Kharif - Rabi",
-            "optimal_temp": (20, 34),
-            "min_moisture": 0.16,
-            "base_mandi_price": 19200,
-            "price_variance": 850,
-            "base_arrivals": 320,
-            "varieties": "Teja (S17), Byadgi 5531, Armoor, US-341, G-4",
-            "water_need": "Medium (Drip Fertigation + Mulch)",
-            "soil_pref": "Deep Black Vertisols & Well-Drained Red Loams"
-        },
-        {
-            "crop": "Paddy / Rice (వరి / धान)",
-            "category": "Cereal Food Grain Staple",
-            "season": "Kharif & Rabi (Yasangi)",
-            "optimal_temp": (22, 36),
-            "min_moisture": 0.22,
-            "base_mandi_price": 2400,
-            "price_variance": 85,
-            "base_arrivals": 580,
-            "varieties": "BPT-5204 (Samba Masuri), MTU-1010, Telangana Sona (RNR 15048), IR-64",
-            "water_need": "High (Canal / Borewell / Delta Puddling)",
-            "soil_pref": "Heavy Clayey Clays & Coastal River Alluvial soils"
-        },
-        {
-            "crop": "Tomato (టమాటా / टमाटर)",
-            "category": "Commercial Cash Horticulture",
-            "season": "Year-Round (Kharif, Rabi, Summer)",
-            "optimal_temp": (18, 33),
-            "min_moisture": 0.15,
-            "base_mandi_price": 1850,
-            "price_variance": 380,
-            "base_arrivals": 490,
-            "varieties": "Saaho 3251, Abhinav, US-440, Arka Rakshak, Shivam",
-            "water_need": "Medium (Drip Irrigation Recommended)",
-            "soil_pref": "Red Sandy Loams & Friable Well-Drained Soils"
-        },
-        {
-            "crop": "Groundnut (వేరుశనగ / मूंगफली)",
-            "category": "Oilseed / Legume",
-            "season": "Kharif (Rainfed) & Rabi",
-            "optimal_temp": (22, 34),
-            "min_moisture": 0.13,
-            "base_mandi_price": 6950,
-            "price_variance": 290,
-            "base_arrivals": 140,
-            "varieties": "Kadiri-6, Dharani, TAG-24, K-9, Narayani",
-            "water_need": "Low-to-Medium (Drought Resilient)",
-            "soil_pref": "Red Sandy Loams & Well-aerated Friable Soils"
-        },
-        {
-            "crop": "Cotton (పత్తి / कपास)",
-            "category": "Commercial Cash Fiber",
-            "season": "Kharif (Monsoon)",
-            "optimal_temp": (22, 38),
-            "min_moisture": 0.16,
-            "base_mandi_price": 7350,
-            "price_variance": 320,
-            "base_arrivals": 260,
-            "varieties": "RCH-659 BG-II, Jaadoo, Bunny, Mallika",
-            "water_need": "Medium (500-750 mm)",
-            "soil_pref": "Deep Black Soils & Heavy Alluvial Loams"
-        },
-        {
-            "crop": "Turmeric (పసుపు / हल्दी)",
-            "category": "Commercial Rhizome Spice",
-            "season": "Kharif Planting (8-9 Month)",
-            "optimal_temp": (22, 35),
-            "min_moisture": 0.20,
-            "base_mandi_price": 14200,
-            "price_variance": 700,
-            "base_arrivals": 80,
-            "varieties": "Duggirala, Armoor, Prathibha, Salem, Alleppey Supreme",
-            "water_need": "High (Frequent Irrigation)",
-            "soil_pref": "Deep Rich Sandy Loams with zero water stagnation"
-        }
-    ],
-
-    # ZONE 4: Eastern Rice & Jute / Tea (West Bengal, Odisha, Bihar, Assam)
+    # =========================================================================
+    # ZONE 4: EASTERN RICE & JUTE / TEA (WEST BENGAL, ODISHA, BIHAR, ASSAM)
+    # =========================================================================
     "east": [
         {
             "crop": "Paddy / Rice (వరి / धान)",
@@ -291,7 +455,9 @@ REGIONAL_CROP_REGISTRY: Dict[str, List[Dict[str, Any]]] = {
         }
     ],
 
-    # ZONE 5: Himalayan Temperate (Himachal Pradesh, J&K, Uttarakhand)
+    # =========================================================================
+    # ZONE 5: HIMALAYAN TEMPERATE (HIMACHAL PRADESH, J&K, UTTARAKHAND)
+    # =========================================================================
     "himalayas": [
         {
             "crop": "Apple (యాపిల్ / सेब)",
@@ -336,42 +502,34 @@ REGIONAL_CROP_REGISTRY: Dict[str, List[Dict[str, Any]]] = {
 }
 
 def detect_agro_zone_key(lat: float, lon: float, location_name: str, state_name: str = "") -> str:
-    """
-    Classifies coordinates into one of the 5 distinct Agro-Climatic Zone Suites.
-    """
-    loc_lower = (location_name + " " + state_name).lower()
+    """Classifies coordinates into one of the 5 distinct Agro-Climatic Zone Suites."""
+    loc_lower = (str(location_name) + " " + str(state_name)).lower()
     
-    # 1. Himalayan Zone
     if any(k in loc_lower for k in ["himachal", "kashmir", "jammu", "shimla", "kullu", "mandi", "uttarakhand", "dehradun", "ladakh"]):
         return "himalayas"
     if lat >= 31.5 and lon <= 78.5:
         return "himalayas"
 
-    # 2. Northern Plains (Punjab, Haryana, Western UP, Rajasthan)
     if any(k in loc_lower for k in ["punjab", "haryana", "rajasthan", "ludhiana", "amritsar", "karnal", "hisar", "jaipur", "jodhpur", "meerut", "delhi"]):
         return "north"
     if lat >= 27.0 and lon <= 78.5:
         return "north"
 
-    # 3. Eastern Rice & Humid (West Bengal, Odisha, Bihar, Assam, North East)
     if any(k in loc_lower for k in ["bengal", "odisha", "bihar", "assam", "kolkata", "bhubaneswar", "patna", "guwahati", "cuttack"]):
         return "east"
     if lon >= 83.0 and lat >= 20.0:
         return "east"
 
-    # 4. Western & Central Plateau (Maharashtra, Gujarat, Madhya Pradesh, Chhattisgarh)
     if any(k in loc_lower for k in ["maharashtra", "gujarat", "madhya pradesh", "mp", "pune", "nashik", "nagpur", "indore", "bhopal", "ahmedabad", "surat", "rajkot", "raipur"]):
         return "west_central"
     if 18.0 <= lat <= 26.0 and lon <= 81.0:
         return "west_central"
 
-    # 5. Southern Zone (Andhra Pradesh, Telangana, Karnataka, Tamil Nadu, Kerala)
+    # Default to South (AP, TS, KA, TN, Kerala)
     return "south"
 
 def get_location_crop_suitability(location_str: str, lat: float = None, lon: float = None) -> Optional[Dict[str, Any]]:
-    """
-    Evaluates strictly region-specific crop suitability based on live satellite telemetry.
-    """
+    """Evaluates strictly region-specific crop suitability based on live satellite telemetry."""
     if lat is None or lon is None:
         geo = geocode_location_strict(location_str)
         if not geo:
@@ -387,7 +545,6 @@ def get_location_crop_suitability(location_str: str, lat: float = None, lon: flo
     zone_key = detect_agro_zone_key(lat, lon, location_str, state)
     crops_pool = REGIONAL_CROP_REGISTRY.get(zone_key, REGIONAL_CROP_REGISTRY["south"])
 
-    # Fetch live satellite thermal & subsoil moisture data
     temp = 27.5
     soil_moisture = 0.20
     elevation = 450.0
@@ -448,9 +605,7 @@ def get_location_crop_suitability(location_str: str, lat: float = None, lon: flo
     }
 
 def get_live_dynamic_mandi_rates(location_str: str, lat: float = None, lon: float = None) -> List[Dict[str, Any]]:
-    """
-    Generates distinct, region-specific APMC Mandi rates keyed by market location and local commodity profiles.
-    """
+    """Generates distinct, region-specific APMC Mandi rates keyed by market location."""
     if lat is None or lon is None:
         geo = geocode_location_strict(location_str)
         if not geo:
@@ -466,19 +621,17 @@ def get_live_dynamic_mandi_rates(location_str: str, lat: float = None, lon: floa
     zone_key = detect_agro_zone_key(lat, lon, location_str, state)
     crops_pool = REGIONAL_CROP_REGISTRY.get(zone_key, REGIONAL_CROP_REGISTRY["south"])
 
-    # Unique deterministic seed based on city name + coordinates + day of year
     loc_hash = int(hashlib.md5(f"{city.lower()}_{round(lat, 2)}_{round(lon, 2)}".encode()).hexdigest()[:8], 16)
     day_seed = datetime.now().timetuple().tm_yday
 
     rates_output = []
     for idx, c in enumerate(crops_pool):
-        # Calculate market price elasticity with location-specific delta
         city_offset = ((loc_hash + idx * 37) % 21) - 10  # -10 to +10% offset
         base = c["base_mandi_price"]
         modal = int(base * (1.0 + (city_offset / 100.0)))
         min_p = int(modal * 0.92)
         max_p = int(modal * 1.08)
-        arrivals = c["base_arrivals"] + ((loc_hash + day_seed) % 85)
+        arrivals = c["base_arrivals"] + ((loc_hash + day_seed + idx * 11) % 85)
         
         delta_pct = round(((city_offset + (day_seed % 5)) / 4.0), 1)
         trend_txt = f"+{delta_pct}% (High Demand Bidding)" if delta_pct > 0 else f"{delta_pct}% (Stable Supply)"
