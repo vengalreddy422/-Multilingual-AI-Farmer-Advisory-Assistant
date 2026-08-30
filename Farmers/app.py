@@ -79,31 +79,24 @@ def load_vision_classifier():
 def load_gemini_advisor():
     return GeminiAgriAdvisor()
 
-@st.cache_data(ttl=900, show_spinner=False)
 def get_cached_weather(city_str, lat=None, lon=None):
     return fetch_weather(city_str, lat=lat, lon=lon)
 
-@st.cache_data(ttl=3600, show_spinner=False)
 def get_cached_reverse_geo(lat: float, lon: float):
     return reverse_geocode_coords(lat, lon)
 
-@st.cache_data(ttl=900, show_spinner=False)
 def get_cached_crop_intel(location, lat, lon):
     return get_location_crop_suitability(location, lat=lat, lon=lon)
 
-@st.cache_data(ttl=900, show_spinner=False)
 def get_cached_mandi(location, lat, lon):
     return get_live_dynamic_mandi_rates(location, lat=lat, lon=lon)
 
-@st.cache_data(ttl=3600, show_spinner=False)
 def get_cached_schemes(acres, location):
     return get_dynamic_schemes(acres, state=location)
 
-@st.cache_data(ttl=3600, show_spinner=False)
 def get_cached_community(location):
     return get_regional_communities(location)
 
-@st.cache_data(ttl=1800, show_spinner=False)
 def get_cached_pest_radar(lat: float, lon: float, location: str):
     return generate_regional_radar_clusters(lat, lon, location)
 
