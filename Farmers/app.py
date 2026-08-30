@@ -386,93 +386,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown(f"### 📍 {t.get('location', 'Current Location')}")
 
-    # 1. Quick Agricultural District Selector (Pan-India)
-    district_presets = [
-        "-- Select District / State --",
-        "Ludhiana, Punjab (ਲੁਧਿਆਣਾ)",
-        "Amritsar, Punjab",
-        "Karnal, Haryana (करनाल)",
-        "Hisar, Haryana",
-        "Varanasi, UP (वाराणसी)",
-        "Lucknow, UP (लखनऊ)",
-        "Gorakhpur, UP",
-        "Patna, Bihar (पटना)",
-        "Muzaffarpur, Bihar",
-        "Pune, Maharashtra (पुणे)",
-        "Nashik, Maharashtra (नासिक)",
-        "Nagpur, Maharashtra (नागपुर)",
-        "Ahmedabad, Gujarat (अहमदाबाद)",
-        "Rajkot, Gujarat",
-        "Jaipur, Rajasthan (जयपुर)",
-        "Jodhpur, Rajasthan",
-        "Indore, MP (इन्दौर)",
-        "Bhopal, MP (भोपाल)",
-        "Raipur, Chhattisgarh",
-        "Coimbatore, Tamil Nadu (கோயம்புத்தூர்)",
-        "Madurai, Tamil Nadu (மதுரை)",
-        "Thanjavur, Tamil Nadu",
-        "Bengaluru, Karnataka (ಬೆಂಗಳೂರು)",
-        "Belagavi, Karnataka (ಬೆಳಗಾವಿ)",
-        "Mysuru, Karnataka (ಮೈಸೂರು)",
-        "Kochi, Kerala",
-        "Palakkad, Kerala",
-        "Guntur, Andhra Pradesh (గుంటూరు)",
-        "Nellore, Andhra Pradesh (నెల్లూరు)",
-        "Madanapalle, Andhra Pradesh (మదనపల్లె)",
-        "Tirupati, Andhra Pradesh (తిరుపతి)",
-        "Kurnool, Andhra Pradesh (కర్నూలు)",
-        "Vijayawada, Andhra Pradesh (విజయవాడ)",
-        "Anantapur, Andhra Pradesh (అనంతపురం)",
-        "Visakhapatnam, Andhra Pradesh (విశాఖపట్నం)",
-        "Hyderabad, Telangana (హైదరాబాద్)",
-        "Warangal, Telangana (వరంగల్)",
-        "Karimnagar, Telangana (కరీంనగర్)",
-        "Khammam, Telangana (ఖమ్మం)",
-        "Kolkata, West Bengal (कोलकाता)",
-        "Bhubaneswar, Odisha (भुवनेश्वर)",
-        "Guwahati, Assam (गुवाहाटी)"
-    ]
-    
-    preset_choice = st.selectbox(
-        "Quick District Selector",
-        district_presets,
-        index=0,
-        label_visibility="collapsed",
-        key="quick_district_select"
-    )
-    if preset_choice and preset_choice != "-- Select District / State --":
-        clean_selected = preset_choice.split(",")[0].strip()
-        geo_res = geocode_location_strict(clean_selected)
-        if geo_res and geo_res["display_name"] != st.session_state.active_location_name:
-            st.session_state.current_lat = geo_res["latitude"]
-            st.session_state.current_lon = geo_res["longitude"]
-            st.session_state.active_location_name = geo_res["display_name"]
-            st.rerun()
-
-    # 2. Type Search with Action Button
-    c_loc_in, c_loc_btn = st.columns([3, 1])
-    with c_loc_in:
-        typed_location = st.text_input(
-            "Search Village / District",
-            value=st.session_state.active_location_name,
-            placeholder="e.g. Nellore, నెల్లూరు, Guntur, Pune...",
-            label_visibility="collapsed",
-            key="custom_loc_input"
-        )
-    with c_loc_btn:
-        set_loc_clicked = st.button("🔍", help="Set Location", use_container_width=True, key="btn_set_loc")
-
-    if set_loc_clicked or (typed_location and typed_location != st.session_state.active_location_name):
-        geo_res = geocode_location_strict(typed_location)
-        if geo_res:
-            st.session_state.current_lat = geo_res["latitude"]
-            st.session_state.current_lon = geo_res["longitude"]
-            st.session_state.active_location_name = geo_res["display_name"]
-            st.rerun()
-        else:
-            st.warning("⚠️ Location not found. Try entering district name.")
-
-    # 3. GPS Detection Button
+    # 1. Automatic Live GPS Detector (Swiggy / Rapido Style)
     st.components.v1.html("""
     <script>
     function triggerGPS() {
@@ -508,12 +422,36 @@ with st.sidebar:
         gap: 6px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     ">
-        🎯 Detect Exact GPS Location
+        🎯 Auto-Detect Live GPS Location
     </button>
     """, height=44)
 
-    # 4. Voice Input for Village / Mandal
-    st.caption("🎙️ Or Speak Village / District:")
+    # 2. Universal Search (Any Village, Mandal, District, PIN Code in India)
+    c_loc_in, c_loc_btn = st.columns([3.5, 1])
+    with c_loc_in:
+        typed_location = st.text_input(
+            "Search Any Village / Mandal / PIN",
+            value=st.session_state.active_location_name,
+            placeholder="e.g. Nellore, నెల్లూరు, Baramati, 524001...",
+            label_visibility="collapsed",
+            key="custom_loc_input"
+        )
+    with c_loc_btn:
+        set_loc_clicked = st.button("🔍", help="Search & Set Location", use_container_width=True, key="btn_set_loc")
+
+    if set_loc_clicked or (typed_location and typed_location != st.session_state.active_location_name):
+        with st.spinner("Resolving location coordinates..."):
+            geo_res = geocode_location_strict(typed_location)
+            if geo_res:
+                st.session_state.current_lat = geo_res["latitude"]
+                st.session_state.current_lon = geo_res["longitude"]
+                st.session_state.active_location_name = geo_res["display_name"]
+                st.rerun()
+            else:
+                st.warning("⚠️ Location not found. Please verify spelling or try PIN code.")
+
+    # 3. Voice Input for Village / Mandal in Any Language
+    st.caption("🎙️ Or Speak Village / Mandal in Your Language:")
     loc_audio = st.audio_input("Record village", label_visibility="collapsed", key="loc_voice_audio")
     if loc_audio is not None:
         try:
@@ -521,14 +459,15 @@ with st.sidebar:
             spoken_loc = transcribe_audio_bytes(voice_bytes, lang_code=st.session_state.lang_key)
             if spoken_loc:
                 st.success(f"🗣️ {spoken_loc}")
-                geo_res = geocode_location_strict(spoken_loc)
-                if geo_res:
-                    st.session_state.current_lat = geo_res["latitude"]
-                    st.session_state.current_lon = geo_res["longitude"]
-                    st.session_state.active_location_name = geo_res["display_name"]
-                    st.rerun()
-                else:
-                    st.warning(f"⚠️ Could not find coordinates for: {spoken_loc}")
+                with st.spinner("Locating..."):
+                    geo_res = geocode_location_strict(spoken_loc)
+                    if geo_res:
+                        st.session_state.current_lat = geo_res["latitude"]
+                        st.session_state.current_lon = geo_res["longitude"]
+                        st.session_state.active_location_name = geo_res["display_name"]
+                        st.rerun()
+                    else:
+                        st.warning(f"⚠️ Could not find coordinates for: {spoken_loc}")
         except Exception:
             pass
 
