@@ -41,6 +41,8 @@ from src.tools.dynamic_engine import (
     get_live_dynamic_mandi_rates
 )
 from src.tools.community_links import get_regional_communities
+import src.tools.pest_radar as pest_radar_module
+importlib.reload(pest_radar_module)
 from src.tools.pest_radar import generate_regional_radar_clusters
 from src.tools.offline_sms import process_offline_sms_query, SMS_KEYWORDS
 from src.tools.pdf_generator import generate_pdf_health_card
